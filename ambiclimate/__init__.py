@@ -4,9 +4,6 @@ import logging
 
 import aiohttp
 import async_timeout
-from gql import gql
-from graphql.language.printer import print_ast
-from graphql_subscription_manager import SubscriptionManager
 
 DEFAULT_TIMEOUT = 10
 API_ENDPOINT = 'https://api.ambiclimate.com/api/v1/'
@@ -42,25 +39,22 @@ class Ambiclimate:
             'Authorization': 'Bearer ' + self._access_token
         }
 
-    url = API_ENDPOINT + command
+        url = API_ENDPOINT + command
 
-    try:
-        with async_timeout.timeout(self._timeout):
-            resp = await
-            self.websession.get(url, headers=headers)
-    except asyncio.TimeoutError:
-        if retry < 1:
-            _LOGGER.error("Timed out sending command to Ambiclimate: %s", command)
+        try:
+            with async_timeout.timeout(self._timeout):
+                resp = await self.websession.get(url, headers=headers)
+        except asyncio.TimeoutError:
+            if retry < 1:
+                _LOGGER.error("Timed out sending command to Ambiclimate: %s", command)
+                return None
+            return await self.request(command, payload, retry - 1)
+        except aiohttp.ClientError:
+            _LOGGER.error("Error sending command to Ambiclimate: %s", command, exc_info=True)
             return None
-        return await
-        self.request(command, payload, retry - 1)
-    except aiohttp.ClientError:
-        _LOGGER.error("Error sending command to Ambiclimate: %s", command, exc_info=True)
-        return None
 
-    result = await
-    resp.json()
-    return result
+        result = await resp.json()
+        return result
 
     async def find_devices(self):
         return None
