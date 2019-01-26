@@ -16,6 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class Ambiclimate:
     """Class to comunicate with the Ambiclimate api."""
+
     # pylint: disable=too-many-instance-attributes
 
     def __init__(self, access_token,
@@ -25,6 +26,7 @@ class Ambiclimate:
         if websession is None:
             async def _create_session():
                 return aiohttp.ClientSession()
+
             loop = asyncio.get_event_loop()
             self.websession = loop.run_until_complete(_create_session())
         else:
@@ -35,29 +37,32 @@ class Ambiclimate:
 
     async def request(self, command, payload, retry=3):
         """Request data."""
-         headers = {
+        headers = {
             "accept": "application/json",
             'Authorization': 'Bearer ' + self._access_token
         }
 
-        url = API_ENDPOINT + command
+    url = API_ENDPOINT + command
 
-        try:
-            with async_timeout.timeout(self._timeout):
-                resp = await self.websession.get(url, headers=headers)
-        except asyncio.TimeoutError:
-            if retry < 1:
-                _LOGGER.error("Timed out sending command to Ambiclimate: %s", command)
-                return None
-            return await self.request(command, payload, retry - 1)
-        except aiohttp.ClientError:
-            _LOGGER.error("Error sending command to Ambiclimate: %s", command, exc_info=True)
+    try:
+        with async_timeout.timeout(self._timeout):
+            resp = await
+            self.websession.get(url, headers=headers)
+    except asyncio.TimeoutError:
+        if retry < 1:
+            _LOGGER.error("Timed out sending command to Ambiclimate: %s", command)
             return None
+        return await
+        self.request(command, payload, retry - 1)
+    except aiohttp.ClientError:
+        _LOGGER.error("Error sending command to Ambiclimate: %s", command, exc_info=True)
+        return None
 
-        result = await resp.json()
-        return result
+    result = await
+    resp.json()
+    return result
 
-    async find_devices(self):
+    async def find_devices(self):
         return None
 
 
@@ -99,6 +104,6 @@ class AmbiclimateDevice:
 
     def get_mode(self):
         return
-    
+
     def get_ir_feature(self):
         return
