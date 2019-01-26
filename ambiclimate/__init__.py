@@ -33,7 +33,7 @@ class Ambiclimate:
         self._access_token = access_token
         self._devices = []
 
-   async def request(self, command, payload, retry=3):
+    async def request(self, command, payload, retry=3):
         """Request data."""
          headers = {
             "accept": "application/json",
@@ -57,6 +57,9 @@ class Ambiclimate:
         result = await resp.json()
         return result
 
+    async find_devices(self):
+        return None
+
 
 class AmbiclimateDevice:
     """Instance of Ambiclimate device."""
@@ -66,3 +69,36 @@ class AmbiclimateDevice:
         self._ambiclimate_control = ambiclimate_control
         self._room_name = room_name
         self._location_name = location_name
+
+    def set_power_off(self):
+        return
+
+    def set_comfort_mode(self, comfort_mode):
+        return
+
+    def set_comfort_feedback(self, comfort_feedback):
+        return
+
+    def set_away_mode_temperature_lower(self, away_mode_temperature_lower):
+        return
+
+    def set_away_mode_temperature_upper(self, away_mode_temperature_upper):
+        return
+
+    def set_away_mode_humidity_upper(self, away_mode_humidity_upper):
+        return
+
+    def set_temperature_mode(self, temperature_mode):
+        return
+
+    def get_sensor_temperature(self):
+        return
+
+    def get_sensor_humidity(self):
+        return
+
+    def get_mode(self):
+        return
+    
+    def get_ir_feature(self):
+        return
