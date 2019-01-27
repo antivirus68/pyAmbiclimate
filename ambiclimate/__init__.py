@@ -73,10 +73,10 @@ class Ambiclimate:
         """Get users Ambi Climate device information."""
         res = []
         for device in self._devices_info:
-            res.append(Ambiclimate(device.get('room_name'),
-                                   device.get('location_name'),
-                                   device.get('device_id'),
-                                   self))
+            res.append(AmbiclimateDevice(device.get('room_name'),
+                                         device.get('location_name'),
+                                         device.get('device_id'),
+                                         self))
         return res
 
 
@@ -92,7 +92,7 @@ class AmbiclimateDevice:
 
     async def request(self, command, params, retry=3):
         """Request data."""
-        params['room_name'] = self._room_name,
+        params['room_name'] = self._room_name
         params['location_name'] = self._location_name
         return await self._ambiclimate_control.request(command, params, retry)
 
