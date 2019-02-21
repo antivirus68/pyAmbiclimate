@@ -217,7 +217,7 @@ class AmbiclimateDevice:
         params = {"mode": data['mode'].lower(),
                   "power": data['power'].lower(),
                   "feature": {
-                      "temperature": str(temperature),
+                      "temperature": str(int(temperature)),
                       "fan": data['fan'].lower(),
                       "louver": data.get('louver', "auto").lower(),
                       'swing': data['swing'].lower()
