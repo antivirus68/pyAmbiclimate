@@ -106,7 +106,7 @@ class AmbiclimateDevice:
         self._room_name = room_name
         self._location_name = location_name
         self._device_id = device_id
-        self.ambiclimate_control = ambiclimate_control
+        self.control = ambiclimate_control
         self.ir_features = None
         self.ac_data = None
         self._mode = None
@@ -127,7 +127,7 @@ class AmbiclimateDevice:
             params['multiple'] = 'True' if params['multiple'] else 'False'
         params['room_name'] = self._room_name
         params['location_name'] = self._location_name
-        res = await self.ambiclimate_control.request(command, params, retry, get)
+        res = await self.control.request(command, params, retry, get)
         try:
             res = json.loads(res)
             if isinstance(res, dict) and res.get('error'):
