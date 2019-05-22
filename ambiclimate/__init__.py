@@ -182,6 +182,8 @@ class AmbiclimateDevice:
     async def get_sensor_temperature(self):
         """Get latest sensor temperature data."""
         res = await self.request('device/sensor/temperature', {})
+        if res is None:
+            return None
         return res[0].get('value')
 
     async def get_sensor_humidity(self):
@@ -195,6 +197,8 @@ class AmbiclimateDevice:
     async def get_mode(self):
         """Get Ambi Climate's current working mode."""
         res = await self.request('device/mode', {})
+        if res is None:
+            return None
         return res.get('mode', '')
 
     async def get_ir_feature(self):
@@ -226,27 +230,19 @@ class AmbiclimateDevice:
 
     async def turn_off(self):
         """Turn off."""
-        data = self.ac_data[0]
-        params = {"mode": data['mode'].lower(),
-                  "power": 'off',
-                  "feature": {
-                      "temperature": str(data['target_temperature']),
-                      "fan": data['fan'].lower(),
-                      "louver": data.get('louver', "auto").lower(),
-                      'swing': data['swing'].lower()
-                  }}
-        return await self.request('device/deployments', params, get=False)
+        return await self.set_power_off()
 
     async def turn_on(self):
         """Turn on."""
         data = self.ac_data[0]
-        params = {"mode": data['mode'].lower(),
+        params = {"mode": data.get('mode', 'Heat').lower(),
                   "power": 'on',
                   "feature": {
-                      "temperature": str(data['target_temperature']),
-                      "fan": data['fan'].lower(),
+                      "temperature": str(data.get('target_temperature',
+                                                  data.get('temperature', 20))),
+                      "fan": data.get('fan', 'Med-High').lower(),
                       "louver": data.get('louver', "auto").lower(),
-                      'swing': data['swing'].lower()
+                      'swing': data.get('swing', 'Oscillate').lower()
                   }}
         return await self.request('device/deployments', params, get=False)
 
