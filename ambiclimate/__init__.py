@@ -235,15 +235,14 @@ class AmbiclimateDevice:
     async def turn_on(self):
         """Turn on."""
         data = self.ac_data[0]
+        feature = {}
+        feature["temperature"] = str(data.get('target_temperature', data.get('temperature', 20)))
+        feature['fan'] = data['fan'].lower() if data.get('fan') else 'med-high'
+        feature['louver'] = data['louver'].lower() if data.get('louver') else 'auto'
+        feature['swing'] = data['swing'].lower() if data.get('swing') else 'oscillate'
         params = {"mode": data.get('mode', 'Heat').lower(),
                   "power": 'on',
-                  "feature": {
-                      "temperature": str(data.get('target_temperature',
-                                                  data.get('temperature', 20))),
-                      "fan": data.get('fan', 'Med-High').lower(),
-                      "louver": data.get('louver', "auto").lower(),
-                      'swing': data.get('swing', 'Oscillate').lower()
-                  }}
+                  "feature": feature}
         return await self.request('device/deployments', params, get=False)
 
     def get_min_temp(self):
