@@ -92,9 +92,9 @@ class AmbiclimateConnection:
         """Refresh access token."""
         token_info = await self.oauth.refresh_access_token(self.token_info)
         if token_info is None:
-            return False
+            return None
         self.token_info = token_info
-        return True
+        return token_info
 
 
 class AmbiclimateDevice:
@@ -334,9 +334,9 @@ class AmbiclimateOAuth:
     async def refresh_access_token(self, token_info):
         """Refresh access token."""
         if token_info is None:
-            return None
+            return token_info
         if not is_token_expired(token_info):
-            return None
+            return token_info
 
         payload = {'client_id': self.client_id,
                    'redirect_uri': self.redirect_uri,
@@ -361,7 +361,7 @@ class AmbiclimateOAuth:
                 return token_info
         except (asyncio.TimeoutError, aiohttp.ClientError):
             _LOGGER.error("Timeout calling Ambiclimate to get auth token.")
-            return None
+        return None
 
 
 def is_token_expired(token_info):
