@@ -8,7 +8,7 @@ setup(
     name = 'Ambiclimate',
     packages = ['ambiclimate'],
     install_requires=['aiohttp>=3.0.6', 'async_timeout>=1.4.0'],
-    version='0.1.3',
+    version='0.2.0',
     description='A python3 library to communicate with Ambiclimate',
     long_description=long_description,
     python_requires='>=3.5.3',
