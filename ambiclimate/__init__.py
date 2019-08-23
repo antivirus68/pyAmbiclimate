@@ -218,13 +218,16 @@ class AmbiclimateDevice:
             return
 
         data = self.ac_data[0]
+        swing_value = ""
+        if 'swing' in data:
+            swing_value = data['swing'].lower()
         params = {"mode": data['mode'].lower(),
                   "power": data['power'].lower(),
                   "feature": {
                       "temperature": str(int(temperature)),
                       "fan": data['fan'].lower(),
                       "louver": data.get('louver', "auto").lower(),
-                      'swing': data['swing'].lower()
+                      'swing': swing_value
                   }}
         return await self.request('device/deployments', params, get=False)
 
